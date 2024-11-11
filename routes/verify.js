@@ -6,8 +6,6 @@ VerifyRouter.get('/', (req, res) => {
     try{
         const headers = req.headers;
         const cookies = req.cookies;
-        console.log(headers);
-        console.log(cookies);
         const token = cookies.token;
         if (!token) {
             return res.json({ 
