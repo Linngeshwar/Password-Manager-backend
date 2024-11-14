@@ -8,7 +8,6 @@ Middleware.use(async (req, res, next) => {
     const username = req.body.username; 
     const password = req.body.password;
     const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
-    console.log(req);
     const user = result.rows[0];
     if (!user) {
         return res.json({
