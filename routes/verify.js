@@ -13,7 +13,7 @@ VerifyRouter.get('/', (req, res) => {
                 message: 'No token provided'
             });
         }
-        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
                 res.json({ 
                     auth: false,
