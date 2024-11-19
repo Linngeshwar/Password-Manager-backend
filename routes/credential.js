@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const {encrypt,decrypt} = require('../util/encryption');
+const passwordGen = require('../util/passwordGen');
 const pool = require('../util/connectdb');
 const jwt = require('jsonwebtoken');
 const credentialRouter = express.Router();
@@ -49,6 +50,13 @@ credentialRouter.post('/decrypt',async (req, res) => {
     const decryptedPassword = decrypt(encryptedPassword);
     res.json({
         "Decrypted":decryptedPassword
+    });
+});
+
+credentialRouter.get('/generate', (req, res) => {
+    const password = passwordGen(req.query.length);
+    res.json({
+        "Generated":password,
     });
 });
 
