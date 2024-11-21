@@ -15,6 +15,7 @@ RegisterRouter.post('/', async (req, res) => {
         return res.json(
             {
                 error: true,
+                auth:false,
                 message: 'Username already exists'
             }
         );
@@ -22,6 +23,7 @@ RegisterRouter.post('/', async (req, res) => {
     await pool.query("INSERT INTO users (username,password,email) VALUES ($1,$2,$3)", [username, hashedPassword,email]);
     res.json({
         error: false,
+        auth:false,
         message: 'User created'
     });
 })
