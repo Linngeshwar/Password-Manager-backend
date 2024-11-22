@@ -2,10 +2,16 @@ const express = require('express');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const VerifyRouter = express.Router();
+const cookieParser = require('cookie-parser');
+
+VerifyRouter.use(cookieParser());
 VerifyRouter.get('/', (req, res) => {
     try{
         const headers = req.headers;
-        const cookies = req.cookies;
+        const cookies = headers.cookie.split(';').reduce((acc,cookie)=>{
+            const [name,value] = cookie.split('=');
+            return {...acc,[name.trim()]:value};
+        },{});
         const token = cookies.token;
         const refreshToken = cookies.refreshToken;
         if(!token && !refreshToken){
@@ -26,16 +32,21 @@ VerifyRouter.get('/', (req, res) => {
                         });
                     }
                     const username = decoded.username;
-                    const newToken = jwt.sign({username:username},process.env.JWT_SECRET_KEY,{expiresIn:'10s'});
+                    const newToken = jwt.sign(
+                        {username:username},
+                        process.env.JWT_SECRET_KEY,
+                        {expiresIn:'1h'}
+                    );
                     res.cookie('token',newToken,{
                         httpOnly:true,
                         sameSite:'lax',
-                        secure:false,
+                        secure:false, 
                         path:'/',
                     }).json({
                         auth:false,
                         error:true,
-                        message:'Token refreshed'
+                        message:'Token refreshed',
+                        newToken:newToken
                     });
                 }
             );
