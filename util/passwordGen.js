@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
-function passwordGen(length = 15) {
-    length = Math.max(length, 15);
+function passwordGen(length = 30) {
+    length = Math.max(length, 30);
 
     const dataset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
     const buffer = crypto.randomBytes(length); 

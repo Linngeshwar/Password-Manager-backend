@@ -18,6 +18,10 @@ credentialRouter.post('/fetchall',VerifyRouter,async (req,res) => {
             values: [username],
         }
         const result = await pool.query(query);
+        // console.log(result.rows);
+        result.rows.forEach((row) => {
+            row.encryptedpassword = decrypt(row.encryptedpassword);
+        });
         res.json(result.rows);
     }catch(err){
         console.log(err);
@@ -48,7 +52,7 @@ credentialRouter.post('/add',VerifyRouter,async (req,res) => {
         const username = decodedToken.username;
 
         const website = req.body.website;
-        const credentialUsername = req.body.credentialUsername;
+        const credentialUsername = req.body.credentialusername;
         const password = req.body.password;
         const encryptedPassword = encrypt(password);
 
@@ -56,6 +60,7 @@ credentialRouter.post('/add',VerifyRouter,async (req,res) => {
             text: 'INSERT INTO credentials (username,credentialUsername,encryptedPassword,website) VALUES($1,$2,$3,$4)',
             values: [username,credentialUsername,encryptedPassword,website],
         }
+        console.log(query);
         await pool.query(query);
         res.json({
             error:false,
@@ -186,7 +191,7 @@ credentialRouter.post('/decrypt',VerifyRouter,async (req, res) => {
 credentialRouter.get('/generate', (req, res) => {
     const password = passwordGen(req.query.length);
     res.json({
-        "Generated":password,
+        "password":password,
     });
 });
 
